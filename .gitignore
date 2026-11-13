@@ -1,0 +1,17 @@
+**/bin/
+**/obj/
+.vs/
+TestResults/
+artifacts/
+llama-b12360-bin-win-cuda-12.4-x64/
+llama-b12360-bin-win-cuda-12.4-x64.zip
+*.pdb
+*.suo
+.idea/
+.omm/
+*.log
+*.jsonl
+*.user
+*.gguf
+*.wav
+appsettings.local.json

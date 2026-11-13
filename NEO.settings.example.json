@@ -1,0 +1,13 @@
+{
+  "HttpEndpoint": "http://127.0.0.1:8081/",
+  "RealtimeEndpoint": "ws://127.0.0.1:8081/v1/realtime",
+  "AutoManageServer": true,
+  "AutoStartVoice": true,
+  "Width": 248,
+  "Height": 48,
+  "TopOffset": 10,
+  "Opacity": 0.98,
+  "Monitor": 0,
+  "AlwaysOnTop": true,
+  "HideInFullscreen": true
+}

@@ -1,0 +1,75 @@
+<UserControl x:Class="NEO.Views.SettingsView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" FontFamily="Segoe UI Variable, Segoe UI" Language="ar-IQ" FlowDirection="RightToLeft" Foreground="{DynamicResource Foreground}">
+  <DockPanel Margin="4,4,4,0">
+    <StackPanel DockPanel.Dock="Top" Margin="0,0,0,24">
+      <TextBlock Text="الإعدادات" FontSize="28" FontWeight="SemiBold" />
+      <TextBlock Text="نيو، بالطريقة التي تناسبك." Foreground="{DynamicResource SecondaryForeground}" Margin="0,6,0,0" />
+    </StackPanel>
+    <Grid DockPanel.Dock="Bottom" Margin="0,20,0,0">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+      <TextBlock x:Name="Error" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,16,0" AutomationProperties.LiveSetting="Assertive" />
+      <Button Background="{DynamicResource BrandBlue}" Foreground="White" x:Name="SaveButton" Grid.Column="1" Click="Save" Padding="18,9" IsDefault="True" AutomationProperties.Name="حفظ الإعدادات">
+        <StackPanel Orientation="Horizontal"><TextBlock Text="&#xE74E;" FontFamily="Segoe Fluent Icons" Margin="0,0,8,0" VerticalAlignment="Center" /><TextBlock Text="حفظ التغييرات" /></StackPanel>
+      </Button>
+    </Grid>
+    <TabControl Background="Transparent" BorderThickness="0" Padding="0,18,0,0">
+      <TabItem>
+        <TabItem.Header><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE720;" FontFamily="Segoe Fluent Icons" Margin="0,0,8,0" VerticalAlignment="Center" /><TextBlock Text="الصوت" /></StackPanel></TabItem.Header>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+          <StackPanel Margin="0,16,8,0">
+            <Border Style="{DynamicResource SectionCard}">
+              <StackPanel><TextBlock Text="المحادثة المباشرة" FontSize="16" FontWeight="SemiBold" />
+                <TextBlock Text="تحدث بشكل طبيعي، وسأستمع إليك وأرد تلقائياً." Foreground="{DynamicResource SecondaryForeground}" Margin="0,6,0,14" TextWrapping="Wrap" />
+                <CheckBox x:Name="AutoVoice" Content="بدء المحادثة الصوتية عند فتح نيو" />
+              </StackPanel>
+            </Border>
+            <Border Style="{DynamicResource SectionCard}">
+              <StackPanel><TextBlock Text="الميكروفون" FontSize="16" FontWeight="SemiBold" />
+                <TextBlock Text="اختر الميكروفون الذي تستخدمه للمحادثة." Foreground="{DynamicResource SecondaryForeground}" Margin="0,6,0,12" />
+                <ComboBox x:Name="Microphone" DisplayMemberPath="Name" SelectedValuePath="Id" HorizontalContentAlignment="Stretch" AutomationProperties.Name="الميكروفون" />
+                <TextBlock Text="يُشغّل الصوت عبر مخرج ويندوز الافتراضي. لإيقاف المحادثة، اضغط أيقونة الميكروفون." TextWrapping="Wrap" Foreground="{DynamicResource SecondaryForeground}" Margin="0,12,0,0" FontSize="12" />
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+      <TabItem>
+        <TabItem.Header><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE7F4;" FontFamily="Segoe Fluent Icons" Margin="0,0,8,0" VerticalAlignment="Center" /><TextBlock Text="سطح المكتب" /></StackPanel></TabItem.Header>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+          <StackPanel Margin="0,16,8,0">
+            <Border Style="{DynamicResource SectionCard}">
+              <StackPanel><TextBlock Text="الشاشة" FontSize="16" FontWeight="SemiBold" /><TextBlock Text="اختر الشاشة التي تظهر عليها الدائرة." Foreground="{DynamicResource SecondaryForeground}" Margin="0,6,0,12" />
+                <ComboBox x:Name="Monitor" AutomationProperties.Name="الشاشة" />
+              </StackPanel>
+            </Border>
+            <Border Style="{DynamicResource SectionCard}">
+              <StackPanel><TextBlock Text="سلوك النافذة" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,14" />
+                <CheckBox x:Name="TopmostOption" Content="إبقاء الدائرة فوق النوافذ الأخرى" Margin="0,0,0,14" />
+                <CheckBox x:Name="Fullscreen" Content="إخفاء نيو عند استخدام ملء الشاشة" />
+              </StackPanel>
+            </Border>
+            <TextBlock Text="يتبع المظهر ألوان ويندوز. افتح المحادثة باستخدام Ctrl+Alt+Space." TextWrapping="Wrap" Foreground="{DynamicResource SecondaryForeground}" Margin="8" />
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+      <TabItem>
+        <TabItem.Header><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE839;" FontFamily="Segoe Fluent Icons" Margin="0,0,8,0" VerticalAlignment="Center" /><TextBlock Text="الاتصال" /></StackPanel></TabItem.Header>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+          <StackPanel Margin="0,16,8,0">
+            <Border Style="{DynamicResource SectionCard}">
+              <StackPanel><TextBlock Text="النموذج المحلي" FontSize="16" FontWeight="SemiBold" />
+                <CheckBox x:Name="AutoServer" Content="تشغيل الخادم المحلي وإدارته تلقائياً" Margin="0,12,0,8" />
+                <TextBlock Text="{Binding ServerStatus}" FontSize="12" Margin="0,0,0,8" />
+                <TextBlock Text="إعداد الاتصال بالنموذج الموجود على جهازك." Foreground="{DynamicResource SecondaryForeground}" Margin="0,6,0,18" />
+                <Label Target="{Binding ElementName=Http}" Content="عنوان الاتصال المحلي" Padding="0,0,0,6" />
+                <TextBox x:Name="Http" FlowDirection="LeftToRight" Margin="0,0,0,18" Padding="10,8" />
+                <Label Target="{Binding ElementName=Realtime}" Content="عنوان المحادثة المباشرة" Padding="0,0,0,6" />
+                <TextBox x:Name="Realtime" FlowDirection="LeftToRight" Padding="10,8" />
+              </StackPanel>
+            </Border>
+            <TextBlock Text="تُعالج المحادثات محلياً على جهازك. لا يقوم نيو بتنزيل النماذج أو تشغيلها." TextWrapping="Wrap" Foreground="{DynamicResource SecondaryForeground}" Margin="8" />
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+    </TabControl>
+  </DockPanel>
+</UserControl>

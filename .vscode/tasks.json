@@ -1,0 +1,29 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build NEO",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["build", "NEO.sln", "-c", "Release"],
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "Test NEO",
+      "type": "process",
+      "command": "dotnet",
+      "args": ["test", "NEO.sln", "-c", "Release"],
+      "group": "test",
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "Run NEO",
+      "type": "process",
+      "command": "powershell",
+      "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "${workspaceFolder}/scripts/dev.ps1"],
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": "$msCompile"
+    }
+  ]
+}
