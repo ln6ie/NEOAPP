@@ -77,7 +77,7 @@ Spoken microphone-turn verification on the target device; HTTP streamed conversa
 
 1. Exercise a spoken microphone turn on the target Windows device and record a non-zero `PEAK_INPUT_LEVEL` with generated output.
 2. Visually validate the native shell on the actual desktop and close through its tray menu.
-3. Exercise cancellation, reconnect, repeated voice cycles, accessibility, performance and remaining attachment gates. Public release also requires the owner's project license selection. CI is authored but has not run on GitHub.
+3. Exercise cancellation, reconnect, repeated voice cycles, accessibility, performance and remaining attachment gates. Preserve the Apache-2.0 license and third-party notices in any release. CI is authored but has not run on GitHub.
 
 ## Current centered conversation update
 

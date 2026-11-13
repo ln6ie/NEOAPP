@@ -8,4 +8,4 @@ App settings and logs are per-user under local application data. Never commit lo
 
 Manual checks before release: multiple monitors with negative coordinates and mixed DPI; light/dark/high contrast and reduced motion; taskbar placement; focus preservation; keyboard-only operation; shortcut conflicts; fullscreen apps; unplugged monitors; Arabic/English text; tray quit; repeated panel/settings open-close; idle and active resource measurements. Voice-specific checks are pending implementation.
 
-Release gates: complete and verify remaining product phases, select the project license with the owner, audit dependency notices and privacy, run CI, publish a versioned package named NEO, and create the owner's GitHub repository as NEO only when publication is authorized.
+The project source is licensed under Apache-2.0; preserve its `LICENSE` file in source and binary distributions. Keep third-party notices current. Release gates: complete and verify remaining product phases, audit dependency notices and privacy, run CI, publish a versioned package named NEO, and create the owner's GitHub repository as NEO only when publication is authorized.
