@@ -17,7 +17,7 @@ internal static class ServerCheck
         health.EnsureSuccessStatusCode();
         Console.WriteLine("HEALTH " + await health.Content.ReadAsStringAsync(deadline.Token));
         using var props = await http.GetFromJsonAsync<JsonDocument>(new Uri(endpoint, "props"), deadline.Token) ?? throw new InvalidOperationException("No props");
-        LlamaServerManager.VerifyIdentity(props.RootElement, new NEOSettings().ServerModelPath);
+        ServerManager.VerifyIdentity(props.RootElement, new Settings().ServerModelPath);
         Console.WriteLine("MODEL " + props.RootElement.GetProperty("model_path").GetString());
         Console.WriteLine("BUILD " + props.RootElement.GetProperty("build_info").GetString());
         var clock = Stopwatch.StartNew();
@@ -41,8 +41,8 @@ internal static class ServerCheck
         if (session.RootElement.GetProperty("type").GetString() != "session.created") throw new InvalidOperationException("Missing realtime session.created");
         Console.WriteLine($"REALTIME_SESSION_CREATED_MS {clock.ElapsedMilliseconds}");
         await socket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "verification complete", deadline.Token);
-        await using var reused = new LlamaServerManager(http, "must-not-be-launched.exe", Path.Combine(Path.GetTempPath(), "NEO-live-check"));
-        await reused.EnsureReadyAsync(new NEOSettings(), deadline.Token);
+        await using var reused = new ServerManager(http, "must-not-be-launched.exe", Path.Combine(Path.GetTempPath(), "NEO-live-check"));
+        await reused.EnsureReadyAsync(new Settings(), deadline.Token);
         if (reused.OwnsServer) throw new InvalidOperationException("Reuse took ownership unexpectedly.");
         await reused.StopAsync(deadline.Token);
         using var stillAlive = await http.GetAsync(new Uri(endpoint, "health"), deadline.Token);

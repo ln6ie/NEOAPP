@@ -11,9 +11,9 @@ namespace NEO.Views;
 public partial class SettingsView : UserControl
 {
     public event Action? Completed;
-    private readonly NEOSettings original;
-    private readonly Func<NEOSettings, Task> save;
-    public SettingsView(NEOSettings settings, Func<NEOSettings, Task> saveSettings)
+    private readonly Settings original;
+    private readonly Func<Settings, Task> save;
+    public SettingsView(Settings settings, Func<Settings, Task> saveSettings)
     {
         InitializeComponent(); original = settings; save = saveSettings;
         Http.Text = settings.HttpEndpoint; Realtime.Text = settings.RealtimeEndpoint;

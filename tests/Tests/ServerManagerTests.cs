@@ -8,9 +8,9 @@ namespace NEO.Tests;
 
 public sealed class ServerManagerTests
 {
-    private static readonly NEOSettings Settings = new();
+    private static readonly Settings Settings = new();
     private static string Props(string? path = null) => JsonSerializer.Serialize(new { model_path = path ?? Settings.ServerModelPath, modalities = new { audio = true }, build_info = "b12360-2d8a32502" });
-    private static LlamaServerManager Manager(HttpClient http) => new(http, "not-a-launchable-host.exe", Path.Combine(Path.GetTempPath(), "NEO-server-tests"));
+    private static ServerManager Manager(HttpClient http) => new(http, "not-a-launchable-host.exe", Path.Combine(Path.GetTempPath(), "NEO-server-tests"));
 
     [Fact]
     public async Task ReusesCompatibleServerAndNeverOwnsOrStopsIt()
@@ -57,7 +57,7 @@ public sealed class ServerManagerTests
     public void ArgumentsPreservePathsAndRequireLocalCudaOffline()
     {
         var settings = Settings with { ServerModelPath = "C:/models/a ; b $(test).gguf" };
-        var args = LlamaServerManager.ServerArguments(settings, 8081);
+        var args = ServerManager.ServerArguments(settings, 8081);
         Assert.Equal(settings.ServerModelPath, args[1]);
         Assert.Contains("CUDA0", args);
         Assert.Contains("--offline", args);
@@ -74,7 +74,7 @@ public sealed class ServerManagerTests
     public void RejectsUnverifiedBuildOrMissingAudio(string json)
     {
         using var props = JsonDocument.Parse(json);
-        Assert.Throws<InvalidOperationException>(() => LlamaServerManager.VerifyIdentity(props.RootElement, "C:/model.gguf"));
+        Assert.Throws<InvalidOperationException>(() => ServerManager.VerifyIdentity(props.RootElement, "C:/model.gguf"));
     }
     private static HttpResponseMessage Ok(string body) => new(HttpStatusCode.OK) { Content = new StringContent(body) };
     private sealed class Handler(Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> handle) : HttpMessageHandler

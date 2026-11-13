@@ -6,18 +6,18 @@ namespace NEO.Infrastructure;
 public sealed class SettingsStore(string path)
 {
     private static readonly JsonSerializerOptions Options = new() { WriteIndented = true };
-    public async Task<NEOSettings> LoadAsync(CancellationToken token = default)
+    public async Task<Settings> LoadAsync(CancellationToken token = default)
     {
-        if (!File.Exists(path)) return new NEOSettings();
+        if (!File.Exists(path)) return new Settings();
         await using var stream = File.OpenRead(path);
         if (stream.Length > 64 * 1024) throw new InvalidDataException("NEO configuration exceeds 64 KB.");
-        var settings = await JsonSerializer.DeserializeAsync<NEOSettings>(stream, Options, token)
+        var settings = await JsonSerializer.DeserializeAsync<Settings>(stream, Options, token)
             ?? throw new InvalidDataException("NEO configuration is empty.");
         settings.Validate();
         return settings;
     }
 
-    public async Task SaveAsync(NEOSettings settings, CancellationToken token = default)
+    public async Task SaveAsync(Settings settings, CancellationToken token = default)
     {
         settings.Validate();
         Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(path))!);

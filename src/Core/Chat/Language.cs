@@ -1,6 +1,6 @@
 namespace NEO.Core;
 
-public static class AssistantLanguage
+public static class Language
 {
     public const string SpeechCode = "en";
 

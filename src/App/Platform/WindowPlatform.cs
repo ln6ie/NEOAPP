@@ -36,7 +36,7 @@ internal static partial class WindowPlatform
         }
     }
 
-    public static void Position(Window window, NEOSettings settings, bool bottom, bool center = false)
+    public static void Position(Window window, Settings settings, bool bottom, bool center = false)
     {
         var screens = Forms.Screen.AllScreens;
         var screen = screens[Math.Min(settings.Monitor, screens.Length - 1)];

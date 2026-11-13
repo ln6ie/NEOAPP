@@ -4,7 +4,7 @@ using NEO.Core;
 
 namespace NEO.Infrastructure;
 
-public sealed class LlamaHealthClient(HttpClient http, Uri endpoint) : IHealthClient
+public sealed class HealthClient(HttpClient http, Uri endpoint) : IHealthClient
 {
     public async Task<ConnectionStatus> CheckAsync(CancellationToken cancellationToken)
     {

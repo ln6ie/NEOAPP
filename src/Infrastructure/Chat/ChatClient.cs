@@ -4,7 +4,7 @@ using NEO.Core;
 
 namespace NEO.Infrastructure;
 
-public sealed class LlamaChatClient(HttpClient http, Uri endpoint) : IChatClient
+public sealed class ChatClient(HttpClient http, Uri endpoint) : IChatClient
 {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
@@ -15,7 +15,7 @@ public sealed class LlamaChatClient(HttpClient http, Uri endpoint) : IChatClient
         deadline.CancelAfter(TimeSpan.FromMinutes(2));
         using var response = await http.PostAsJsonAsync(new Uri(endpoint, "v1/chat/completions"), new
         {
-            model = "local", messages = new[] { new ChatMessage("system", AssistantLanguage.Instructions) }.Concat(messages).Select(ToWireMessage).ToArray(), stream = false, temperature = 0, max_tokens = 2048
+            model = "local", messages = new[] { new ChatMessage("system", Language.Instructions) }.Concat(messages).Select(ToWireMessage).ToArray(), stream = false, temperature = 0, max_tokens = 2048
         }, JsonOptions, deadline.Token).ConfigureAwait(false);
         var body = await response.Content.ReadAsStringAsync(deadline.Token).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)

@@ -28,7 +28,7 @@ public partial class App : Application
     private readonly HttpClient http = new(new HttpClientHandler { AllowAutoRedirect = false });
     private readonly string dataDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "NEO");
     private SettingsStore store = null!;
-    private NEOSettings settings = new();
+    private Settings settings = new();
     private NotchWindow notch = null!;
     private ConversationWindow conversation = null!;
     private bool conversationPositioned;
@@ -38,7 +38,7 @@ public partial class App : Application
     private DispatcherTimer? fullscreenTimer;
     private DispatcherTimer? recoveryTimer;
     private bool recovering;
-    private ILlamaServerManager serverManager = null!;
+    private IServerManager serverManager = null!;
     private Task serverOperation = Task.CompletedTask;
     private bool exiting;
     private bool voiceEnabled;
@@ -69,7 +69,7 @@ public partial class App : Application
         Directory.CreateDirectory(dataDirectory);
         DispatcherUnhandledException += OnUnhandled;
         store = new SettingsStore(Path.Combine(dataDirectory, "NEO.settings.json"));
-        serverManager = new LlamaServerManager(http, Path.Combine(AppContext.BaseDirectory, "NEO.ServerHost.exe"), dataDirectory);
+        serverManager = new ServerManager(http, Path.Combine(AppContext.BaseDirectory, "NEO.ServerHost.exe"), dataDirectory);
         serverManager.StateChanged += state => Dispatcher.InvokeAsync(() => viewModel?.SetServerState(state));
         notch = new NotchWindow(); conversation = new ConversationWindow(); MainWindow = notch;
         foreach (Window window in new Window[] { notch, conversation })
@@ -122,13 +122,13 @@ public partial class App : Application
         if (voiceSession == null || !string.Equals(voiceEndpoint, settings.RealtimeEndpoint, StringComparison.OrdinalIgnoreCase) || microphoneDeviceId != settings.MicrophoneDeviceId)
         {
             var old = voiceSession;
-            voiceSession = new LlamaRealtimeVoiceSession(new Uri(settings.RealtimeEndpoint), settings.MicrophoneDeviceId);
+            voiceSession = new VoiceSession(new Uri(settings.RealtimeEndpoint), settings.MicrophoneDeviceId);
             voiceEndpoint = settings.RealtimeEndpoint;
             microphoneDeviceId = settings.MicrophoneDeviceId;
             if (old != null) _ = old.DisposeAsync();
         }
         viewModel?.Dispose();
-        viewModel = new AssistantViewModel(new LlamaHealthClient(http, endpoint), new LlamaChatClient(http, endpoint), voiceSession, lifetime.Token);
+        viewModel = new AssistantViewModel(new HealthClient(http, endpoint), new ChatClient(http, endpoint), voiceSession, lifetime.Token);
         notch.DataContext = conversation.DataContext = viewModel;
         viewModel.SetServerState(serverManager.State);
         notch.Opacity = 1;

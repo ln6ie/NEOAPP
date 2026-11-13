@@ -19,7 +19,7 @@ internal static class SpeakerCheck
         var queue = new PcmPlaybackBuffer(rate);
         using var speaker = new WasapiOut(AudioClientShareMode.Shared, 50);
         speaker.Init(queue);
-        await SendAsync(socket, new { type = "session.update", session = new { instructions = arabic ? AssistantLanguage.Instructions : "Speak clearly and naturally.", output_modalities = new[] { "text", "audio" }, audio = new { output = new { voice = "female", language = arabic ? AssistantLanguage.SpeechCode : "en" } } } }, timeout.Token);
+        await SendAsync(socket, new { type = "session.update", session = new { instructions = arabic ? Language.Instructions : "Speak clearly and naturally.", output_modalities = new[] { "text", "audio" }, audio = new { output = new { voice = "female", language = arabic ? Language.SpeechCode : "en" } } } }, timeout.Token);
         var prompt = arabic ? "قل بالعربية فقط: أهلاً، أنا نيو، مساعدك الشخصي. كيف يمكنني مساعدتك اليوم؟" : "Say exactly: Hello, I am NEO, your local voice assistant. I will speak clearly and naturally, and listen when you finish talking.";
         if (question != null) prompt = question;
         await SendAsync(socket, new { type = "conversation.item.create", item = new { type = "message", role = "user", content = new[] { new { type = "input_text", text = prompt } } } }, timeout.Token);

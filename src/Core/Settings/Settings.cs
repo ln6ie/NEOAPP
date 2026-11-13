@@ -1,6 +1,6 @@
 namespace NEO.Core;
 
-public sealed record NEOSettings
+public sealed record Settings
 {
     public string HttpEndpoint { get; init; } = "http://127.0.0.1:8081/";
     public string RealtimeEndpoint { get; init; } = "ws://127.0.0.1:8081/v1/realtime";

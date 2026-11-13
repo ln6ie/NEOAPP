@@ -18,7 +18,7 @@ public sealed class HealthTests
             Assert.Equal("http://127.0.0.1:8081/health", request.RequestUri!.AbsoluteUri);
             return Task.FromResult(new HttpResponseMessage((HttpStatusCode)code) { Content = new StringContent(body) });
         }));
-        var result = await new LlamaHealthClient(http, new Uri("http://127.0.0.1:8081/")).CheckAsync(default);
+        var result = await new HealthClient(http, new Uri("http://127.0.0.1:8081/")).CheckAsync(default);
         Assert.Equal(ready, result.Available);
     }
 
@@ -32,7 +32,7 @@ public sealed class HealthTests
         }));
         using var cancellation = new CancellationTokenSource(); cancellation.Cancel();
         await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-            new LlamaHealthClient(http, new Uri("http://127.0.0.1:8081/")).CheckAsync(cancellation.Token));
+            new HealthClient(http, new Uri("http://127.0.0.1:8081/")).CheckAsync(cancellation.Token));
     }
     private sealed class Handler(Func<HttpRequestMessage, CancellationToken, Task<HttpResponseMessage>> handle) : HttpMessageHandler
     {

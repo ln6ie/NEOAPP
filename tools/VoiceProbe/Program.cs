@@ -4,7 +4,7 @@ using NEO.Core;
 if (args.Contains("--arabic-quality-check"))
 {
     using var http = new HttpClient();
-    var client = new LlamaChatClient(http, new Uri("http://127.0.0.1:8081/"));
+    var client = new ChatClient(http, new Uri("http://127.0.0.1:8081/"));
     foreach (var question in new[] { "كم يساوي سبعة زائد خمسة؟", "ما عاصمة العراق؟", "احذف ملفاتي من الكمبيوتر الآن. هل نفذت الحذف؟" })
         Console.WriteLine($"QUESTION {question}\nANSWER {await client.SendAsync([new ChatMessage("user", question)], default)}");
     await SpeakerCheck.RunAsync(true, "ما عاصمة العراق؟ أجب بجملة قصيرة.");
@@ -19,7 +19,7 @@ if (args.Contains("--attachment-check"))
     using var http = new HttpClient();
     var imagePath = args.Last();
     var image = await AttachmentReader.ReadAsync(imagePath);
-    var result = await new LlamaChatClient(http, new Uri("http://127.0.0.1:8081/")).SendAsync(
+    var result = await new ChatClient(http, new Uri("http://127.0.0.1:8081/")).SendAsync(
         [new ChatMessage("user", "اقرأ رمز التحقق من الملف المرفق واكتبه كما هو، ثم صف اللون الرئيسي للصورة بجملة عربية واحدة.",
             [new ChatAttachment("verification.txt", "text/plain", Text: "رمز التحقق: NEO-FILES-42"), image])], default);
     Console.WriteLine(result);
@@ -41,7 +41,7 @@ if (args.Contains("--speaker-check"))
 
 var seconds = 8;
 if (args.Length > 0 && int.TryParse(args[0], out var parsed)) seconds = Math.Clamp(parsed, 2, 60);
-await using var voice = new LlamaRealtimeVoiceSession(new Uri("ws://127.0.0.1:8081/v1/realtime"));
+await using var voice = new VoiceSession(new Uri("ws://127.0.0.1:8081/v1/realtime"));
 voice.StateChanged += state => Console.WriteLine($"STATE {DateTimeOffset.Now:O} {state}");
 voice.TextDelta += text => Console.Write(text);
 voice.ResponseCompleted += response => Console.WriteLine($"\nRESPONSE cancelled={response.Cancelled} text={response.Text}");

@@ -8,17 +8,17 @@ namespace NEO.Infrastructure;
 
 public enum LlamaServerState { Disconnected, Loading, Ready, Error }
 
-public interface ILlamaServerManager : IAsyncDisposable
+public interface IServerManager : IAsyncDisposable
 {
     LlamaServerState State { get; }
     bool OwnsServer { get; }
     event Action<LlamaServerState>? StateChanged;
-    Task EnsureReadyAsync(NEOSettings settings, CancellationToken token);
+    Task EnsureReadyAsync(Settings settings, CancellationToken token);
     Task StopAsync(CancellationToken token = default);
 }
 
 /// <summary>Injected HTTP transport; serialized, loopback-only lifecycle with explicit ownership.</summary>
-public sealed class LlamaServerManager(HttpClient http, string hostExecutable, string lockDirectory) : ILlamaServerManager
+public sealed class ServerManager(HttpClient http, string hostExecutable, string lockDirectory) : IServerManager
 {
     private readonly SemaphoreSlim gate = new(1, 1);
     private Process? host;
@@ -29,7 +29,7 @@ public sealed class LlamaServerManager(HttpClient http, string hostExecutable, s
     public bool OwnsServer => host is { HasExited: false };
     public event Action<LlamaServerState>? StateChanged;
 
-    public async Task EnsureReadyAsync(NEOSettings settings, CancellationToken token)
+    public async Task EnsureReadyAsync(Settings settings, CancellationToken token)
     {
         await gate.WaitAsync(token).ConfigureAwait(false);
         try
@@ -85,9 +85,9 @@ public sealed class LlamaServerManager(HttpClient http, string hostExecutable, s
         finally { gate.Release(); }
     }
 
-    public static string[] ServerArguments(NEOSettings settings, int port) => ["-m", settings.ServerModelPath, "--mmproj", settings.ServerProjectorPath, "-ngl", "99", "-c", "4096", "--host", "127.0.0.1", "--port", port.ToString(System.Globalization.CultureInfo.InvariantCulture), "--device", "CUDA0", "--offline", "--reasoning", "off", "--tts-lang", "en", "--tts-voice", "female"];
+    public static string[] ServerArguments(Settings settings, int port) => ["-m", settings.ServerModelPath, "--mmproj", settings.ServerProjectorPath, "-ngl", "99", "-c", "4096", "--host", "127.0.0.1", "--port", port.ToString(System.Globalization.CultureInfo.InvariantCulture), "--device", "CUDA0", "--offline", "--reasoning", "off", "--tts-lang", "en", "--tts-voice", "female"];
 
-    private static void ValidateFiles(NEOSettings settings)
+    private static void ValidateFiles(Settings settings)
     {
         foreach (var path in new[] { settings.ServerExecutablePath, settings.ServerModelPath, settings.ServerProjectorPath })
             if (!Path.IsPathFullyQualified(path) || !File.Exists(path)) throw new FileNotFoundException("A configured server/model/projector file is missing.", path);

@@ -6,10 +6,10 @@ internal static class ExternalServerFixture
 {
     public static async Task RunAsync(string hostPath)
     {
-        var settings = new NEOSettings();
+        var settings = new Settings();
         var start = new ProcessStartInfo(Path.GetFullPath(hostPath)) { UseShellExecute = false, CreateNoWindow = true, RedirectStandardInput = true, RedirectStandardOutput = true, RedirectStandardError = true };
         start.ArgumentList.Add(settings.ServerExecutablePath);
-        foreach (var arg in LlamaServerManager.ServerArguments(settings, 8081)) start.ArgumentList.Add(arg);
+        foreach (var arg in ServerManager.ServerArguments(settings, 8081)) start.ArgumentList.Add(arg);
         start.ArgumentList.Add("--verbose");
         using var host = Process.Start(start) ?? throw new InvalidOperationException("Fixture host did not start.");
         var stdout = Pump(host.StandardOutput);
